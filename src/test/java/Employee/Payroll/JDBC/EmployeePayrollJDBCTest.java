@@ -4,8 +4,20 @@
 package Employee.Payroll.JDBC;
 
 import org.junit.Test;
+
+import Employee.Payroll.JDBC.EmployeePayrollService.IOService;
+import junit.framework.Assert;
+
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 public class EmployeePayrollJDBCTest {
-    
+    @Test
+    public void givenEmpPayrollDataInDB_ShouldMatchEmpCount() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	System.out.println(empPayrollData.size());
+    	Assert.assertEquals(3, empPayrollData.size());
+    }
 }
