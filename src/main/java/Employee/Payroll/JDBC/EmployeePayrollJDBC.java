@@ -85,19 +85,8 @@ public class EmployeePayrollJDBC {
 		return employeePayrollList;
 	}
 
-	private void prepareStatementForEmployeeData() {
-		try {
-			Connection connection = this.getConnection();
-			String sql = "SELECT * FROM emp_payroll WHERE name = ?";
-			employeePayrollDataStatement = connection.prepareStatement(sql);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int updateData(String name, double salary) {
-		return this.updateEmployeeDataUsingStatement(name, salary);
+		return this.updateEmployeeDataUsingPreparedStatement(name, salary);
 	}
 
 	private int updateEmployeeDataUsingStatement(String name, double salary) {
@@ -110,6 +99,31 @@ public class EmployeePayrollJDBC {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	private int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
+		String sql = "update emp_payroll set salary = ? where name = ?";
+		try(Connection connection = this.getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setDouble(1, salary);
+			preparedStatement.setString(2, name);
+			return preparedStatement.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	private void prepareStatementForEmployeeData() {
+		try {
+			Connection connection = this.getConnection();
+			String sql = "SELECT * FROM emp_payroll WHERE name = ?";
+			employeePayrollDataStatement = connection.prepareStatement(sql);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
