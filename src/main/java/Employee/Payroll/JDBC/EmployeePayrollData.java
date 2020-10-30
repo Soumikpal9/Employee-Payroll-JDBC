@@ -9,14 +9,15 @@ public class EmployeePayrollData {
 	public LocalDate start;
 	public String gender;
 	
-	public EmployeePayrollData(Integer id, String name, Double salary) {
+	public EmployeePayrollData(Integer id, String name, Double salary, String gender) {
 		this.id = id;
 		this.name = name;
 		this.salary = salary;
+		this.gender = gender;
 	}
 	
-	public EmployeePayrollData(Integer id, String name, Double salary, LocalDate start) {
-		this(id,name,salary);
+	public EmployeePayrollData(Integer id, String name, Double salary, String gender, LocalDate start) {
+		this(id,name,salary, gender);
 		this.start = start;
 	}
 	

@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollJDBCTest {
@@ -23,9 +24,19 @@ public class EmployeePayrollJDBCTest {
     @Test 
     public void givenNewSalary_WhenUpdated_shouldMatchWithDB() {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
-    	List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
     	empPayrollService.updateEmployeeSalary("Soumik", 70000);
     	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Soumik");
     	Assert.assertTrue(result);
+    }
+    
+    @Test 
+    public void givenDateRange_WhenRetrieved_ShouldMatchEmpCount() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	LocalDate startDate = LocalDate.of(2018, 01, 01);
+    	LocalDate endDate = LocalDate.now();
+    	List<EmployeePayrollData> employeePayrollData = empPayrollService.readEmployeePayrollForDateRange(IOService.DB_IO, startDate, endDate);
+    	Assert.assertEquals(3, employeePayrollData.size());
     }
 }
