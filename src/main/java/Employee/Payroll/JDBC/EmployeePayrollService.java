@@ -1,5 +1,6 @@
 package Employee.Payroll.JDBC;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollService {
@@ -26,6 +27,18 @@ public class EmployeePayrollService {
 		return this.employeePayrollList;
 	}
 	
+	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDB.getEmployeePayrollForDateRange(startDate, endDate);
+		}
+		return null;
+	}
+	
+	public boolean checkEmployeePayrollInSyncWithDB(String name) {
+		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDB.getEmployeePayrollData(name);
+		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+	}
+	
 	public void updateEmployeeSalary(String name, double salary) {
 		int result = employeePayrollDB.updateData(name, salary);
 		if(result == 0)	return;
@@ -40,10 +53,5 @@ public class EmployeePayrollService {
 													  .findFirst()
 													  .orElse(null);
 		return employeePayrollData;
-	}
-
-	public boolean checkEmployeePayrollInSyncWithDB(String name) {
-		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDB.getEmployeePayrollData(name);
-		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 }

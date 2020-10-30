@@ -4,6 +4,7 @@
 package Employee.Payroll.JDBC;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -39,16 +40,7 @@ public class EmployeePayrollJDBC {
 
 	public List<EmployeePayrollData> readData() {
 		String sql = "SELECT * FROM emp_payroll ; ";
-		List<EmployeePayrollData> empPayrollList = new ArrayList<>();
-		try(Connection connection = this.getConnection()) {
-			Statement statement = connection.createStatement();
-			ResultSet result = statement.executeQuery(sql);
-			empPayrollList = this.getEmployeePayrollData(result);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return empPayrollList;
+		return this.getEmployeePayrollDataUSingDB(sql);
 	}
 	
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) {
@@ -66,6 +58,24 @@ public class EmployeePayrollJDBC {
 		}
 		return employeePayrollList;
 	}
+	
+	public List<EmployeePayrollData> getEmployeePayrollForDateRange(LocalDate startDate, LocalDate endDate) {
+		String sql = String.format("SELECT * FROM emp_payroll WHERE start BETWEEN '%s' AND '%s'", Date.valueOf(startDate), Date.valueOf(endDate));
+		return this.getEmployeePayrollDataUSingDB(sql);
+	}
+
+	private List<EmployeePayrollData> getEmployeePayrollDataUSingDB(String sql) {
+		List<EmployeePayrollData> empPayrollList = new ArrayList<>();
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			empPayrollList = this.getEmployeePayrollData(result);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return empPayrollList;
+	}
 
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet result) {
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
@@ -76,7 +86,7 @@ public class EmployeePayrollJDBC {
 				double salary = result.getDouble("salary");
 				String gender = result.getString("gender");
 				LocalDate start = result.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id,name,salary,start));
+				employeePayrollList.add(new EmployeePayrollData(id,name,salary,gender,start));
 			}
 		}
 		catch(SQLException e) {
@@ -124,6 +134,5 @@ public class EmployeePayrollJDBC {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
+	}	
 }
