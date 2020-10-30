@@ -2,6 +2,7 @@ package Employee.Payroll.JDBC;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollService {
 	public enum IOService {
@@ -30,6 +31,20 @@ public class EmployeePayrollService {
 	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) {
 		if(ioService.equals(IOService.DB_IO)) {
 			return employeePayrollDB.getEmployeePayrollForDateRange(startDate, endDate);
+		}
+		return null;
+	}
+	
+	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDB.getAverageSalaryByGender();
+		}
+		return null;
+	}
+	
+	public Map<String, Double> readSumSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDB.getSumSalaryByGender();
 		}
 		return null;
 	}

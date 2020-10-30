@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollJDBCTest {
     @Test
@@ -38,5 +39,21 @@ public class EmployeePayrollJDBCTest {
     	LocalDate endDate = LocalDate.now();
     	List<EmployeePayrollData> employeePayrollData = empPayrollService.readEmployeePayrollForDateRange(IOService.DB_IO, startDate, endDate);
     	Assert.assertEquals(3, employeePayrollData.size());
+    }
+    
+    @Test
+    public void givenPayrollData_WhenAverageSalaryRetrievedByGender_ShouldReturnProperValue() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	Map<String, Double> averageSalaryByGender = empPayrollService.readAverageSalaryByGender(IOService.DB_IO);
+    	Assert.assertTrue(averageSalaryByGender.get("M").equals(65000.0) && averageSalaryByGender.get("F").equals(55000.0));
+    }
+    
+    @Test
+    public void givenPayrollData_WhenSumSalaryRetrievedByGender_ShouldReturnProperValue() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	Map<String, Double> sumSalaryByGender = empPayrollService.readSumSalaryByGender(IOService.DB_IO);
+    	Assert.assertTrue(sumSalaryByGender.get("M").equals(130000.0));
     }
 }

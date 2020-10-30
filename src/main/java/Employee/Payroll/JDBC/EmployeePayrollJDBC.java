@@ -14,7 +14,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollJDBC {
 	private static EmployeePayrollJDBC employeePayrollDB;
@@ -98,7 +100,43 @@ public class EmployeePayrollJDBC {
 	public int updateData(String name, double salary) {
 		return this.updateEmployeeDataUsingPreparedStatement(name, salary);
 	}
-
+	
+	public Map<String, Double> getAverageSalaryByGender() {
+		String sql = "SELECT gender, AVG(salary) AS avg_salary FROM emp_payroll GROUP BY gender";
+		Map<String, Double> genderToAverageSalaryMap = new HashMap<>();
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String gender = result.getString("gender");
+				double salary = result.getDouble("avg_salary");
+				genderToAverageSalaryMap.put(gender, salary);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return genderToAverageSalaryMap;
+	}
+	
+	public Map<String, Double> getSumSalaryByGender() {
+		String sql = "SELECT gender, SUM(salary) AS sum_salary FROM emp_payroll GROUP BY gender";
+		Map<String, Double> genderToSumSalaryMap = new HashMap<>();
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String gender = result.getString("gender");
+				double salary = result.getDouble("sum_salary");
+				genderToSumSalaryMap.put(gender, salary);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return genderToSumSalaryMap;
+	}
+	
 	private int updateEmployeeDataUsingStatement(String name, double salary) {
 		String sql = String.format("update emp_payroll set salary = %.2f where name = %s", salary, name);
 		try(Connection connection = this.getConnection()) {
