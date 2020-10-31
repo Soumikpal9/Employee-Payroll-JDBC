@@ -162,6 +162,7 @@ public class EmployeePayrollJDBC {
 		Connection connection = null;
 		try {
 			connection = this.getConnection();
+			connection.setAutoCommit(false);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -176,6 +177,13 @@ public class EmployeePayrollJDBC {
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+				return employeePayrollData;
+			}
+			catch(SQLException e1) {
+				e1.printStackTrace();
+			}
 		}
 		try(Statement statement = connection.createStatement()) {
 			double deductions = salary * 0.2;
@@ -188,6 +196,18 @@ public class EmployeePayrollJDBC {
 			if(rowAffected == 1) {
 				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, gender, startDate);
 			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			}
+			catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		try {
+			connection.commit();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
