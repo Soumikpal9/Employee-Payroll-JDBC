@@ -58,6 +58,15 @@ public class EmployeePayrollService {
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 	
+	public boolean checkEmployeePayrollAfterDeletion(String name) {
+		for(EmployeePayrollData emp : employeePayrollList) {
+			if(emp.name.equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void updateEmployeeSalary(String name, double salary) {
 		int result = employeePayrollDB.updateData(name, salary);
 		if(result == 0)	return;
@@ -72,5 +81,9 @@ public class EmployeePayrollService {
 													  .findFirst()
 													  .orElse(null);
 		return employeePayrollData;
+	}
+
+	public void deleteEmployeeFromPayroll(String name) {
+		employeePayrollDB.deleteEmployeeData(name);
 	}
 }

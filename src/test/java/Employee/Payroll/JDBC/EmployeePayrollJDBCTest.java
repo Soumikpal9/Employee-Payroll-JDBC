@@ -65,4 +65,13 @@ public class EmployeePayrollJDBCTest {
     	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Sneha");
     	Assert.assertTrue(result);
     }
+    
+    @Test
+    public void givenEmployee_WhenDeleted_ShouldSyncWithDB() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	empPayrollService.deleteEmployeeFromPayroll("Sreyansh");
+    	boolean result = empPayrollService.checkEmployeePayrollAfterDeletion("Sreyansh");
+    	Assert.assertTrue(result);
+    }
 }
