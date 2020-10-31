@@ -260,5 +260,16 @@ public class EmployeePayrollJDBC {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void deleteEmployeeData(String name) {
+		String sql = String.format("DELETE FROM emp_payroll WHERE name = '%s'", name);
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(sql);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}	
 }
