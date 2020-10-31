@@ -19,7 +19,7 @@ public class EmployeePayrollJDBCTest {
     public void givenEmpPayrollDataInDB_ShouldMatchEmpCount() {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
     	List<EmployeePayrollData> empPayrollData = empPayrollService.readEmployeePayrollData(IOService.DB_IO);
-    	Assert.assertEquals(3, empPayrollData.size());
+    	Assert.assertEquals(4, empPayrollData.size());
     }
     
     @Test 
@@ -38,7 +38,7 @@ public class EmployeePayrollJDBCTest {
     	LocalDate startDate = LocalDate.of(2018, 01, 01);
     	LocalDate endDate = LocalDate.now();
     	List<EmployeePayrollData> employeePayrollData = empPayrollService.readEmployeePayrollForDateRange(IOService.DB_IO, startDate, endDate);
-    	Assert.assertEquals(3, employeePayrollData.size());
+    	Assert.assertEquals(4, employeePayrollData.size());
     }
     
     @Test
@@ -46,7 +46,7 @@ public class EmployeePayrollJDBCTest {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
     	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
     	Map<String, Double> averageSalaryByGender = empPayrollService.readAverageSalaryByGender(IOService.DB_IO);
-    	Assert.assertTrue(averageSalaryByGender.get("M").equals(65000.0) && averageSalaryByGender.get("F").equals(55000.0));
+    	Assert.assertTrue(averageSalaryByGender.get("M").equals(65000.0) && averageSalaryByGender.get("F").equals(62500.0));
     }
     
     @Test
@@ -55,5 +55,14 @@ public class EmployeePayrollJDBCTest {
     	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
     	Map<String, Double> sumSalaryByGender = empPayrollService.readSumSalaryByGender(IOService.DB_IO);
     	Assert.assertTrue(sumSalaryByGender.get("M").equals(130000.0));
+    }
+    
+    @Test
+    public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	empPayrollService.addEmployeeToPayroll("Sneha", 70000.0, LocalDate.now(), "F");
+    	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Sneha");
+    	Assert.assertTrue(result);
     }
 }

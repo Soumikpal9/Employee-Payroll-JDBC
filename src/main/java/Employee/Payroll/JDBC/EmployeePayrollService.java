@@ -49,6 +49,10 @@ public class EmployeePayrollService {
 		return null;
 	}
 	
+	public void addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender) {
+		employeePayrollList.add(employeePayrollDB.addEmployeeToPayroll(name, salary, startDate, gender));
+	}
+	
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
 		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDB.getEmployeePayrollData(name);
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));

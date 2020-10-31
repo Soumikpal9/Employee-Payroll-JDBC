@@ -137,6 +137,25 @@ public class EmployeePayrollJDBC {
 		return genderToSumSalaryMap;
 	}
 	
+	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender) {
+		int employeeId = -1;
+		EmployeePayrollData employeePayrollData = null;
+		String sql = String.format("INSERT INTO emp_payroll (name, salary, start, gender) VALUES ('%s', %s, '%s', '%s')", name, salary, Date.valueOf(startDate), gender);
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if(rowAffected == 1) {
+				ResultSet result = statement.getGeneratedKeys();
+				if(result.next())	employeeId = result.getInt("id");
+			}
+			employeePayrollData = new EmployeePayrollData(employeeId, name, salary, gender, startDate);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollData;
+	}
+	
 	private int updateEmployeeDataUsingStatement(String name, double salary) {
 		String sql = String.format("update emp_payroll set salary = %.2f where name = %s", salary, name);
 		try(Connection connection = this.getConnection()) {
