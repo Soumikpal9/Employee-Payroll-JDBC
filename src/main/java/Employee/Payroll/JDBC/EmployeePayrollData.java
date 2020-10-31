@@ -28,6 +28,6 @@ public class EmployeePayrollData {
 		EmployeePayrollData that = (EmployeePayrollData)o;
 		return id == that.id && 
 				Double.compare(that.salary, salary) == 0 &&
-				name.contentEquals(that.name);
+				name.contentEquals(that.name) && this.gender.contentEquals(that.gender);
 	}
 }
