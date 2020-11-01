@@ -1,6 +1,7 @@
 package Employee.Payroll.JDBC;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,5 +86,13 @@ public class EmployeePayrollService {
 
 	public void deleteEmployeeFromPayroll(String name) {
 		employeePayrollDB.deleteEmployeeData(name);
+	}
+
+	public void addEmployeeToPayrollWithoutThreads(List<EmployeePayrollData> employeePayrollList) {
+		employeePayrollList.forEach(employeePayrollData -> {
+			System.out.println("Employee being added : " + employeePayrollData.name);
+			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.start, employeePayrollData.gender);
+			System.out.println("Employee added : " + employeePayrollData.name);
+		});
 	}
 }

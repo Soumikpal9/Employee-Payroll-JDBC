@@ -187,7 +187,6 @@ public class EmployeePayrollJDBC {
 		}
 		try(Statement statement = connection.createStatement()) {
 			double deductions = salary * 0.2;
-			System.out.println(deductions);
 			double taxable_pay = salary - deductions;
 			double tax = taxable_pay * 0.1;
 			double net_pay = salary - tax;
