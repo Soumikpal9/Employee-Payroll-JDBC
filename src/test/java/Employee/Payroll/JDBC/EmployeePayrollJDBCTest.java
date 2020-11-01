@@ -91,7 +91,11 @@ public class EmployeePayrollJDBCTest {
     	empPayrollService.addEmployeeToPayrollWithoutThreads(Arrays.asList(empPayrollData));
     	Instant end = Instant.now();
     	System.out.println("Duration without thread : " + Duration.between(start, end));
+    	Instant threadStart = Instant.now();
+    	empPayrollService.addEmployeeToPayrollWithThreads(Arrays.asList(empPayrollData));
+    	Instant threadEnd = Instant.now();
+    	System.out.println("Duration with thread : " + Duration.between(threadStart, threadEnd));
     	List<EmployeePayrollData> employeePayrollData = empPayrollService.readEmployeePayrollData(IOService.DB_IO);
-    	Assert.assertEquals(4, employeePayrollData.size());
+    	Assert.assertEquals(7, employeePayrollData.size());
     }
 }
