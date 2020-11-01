@@ -10,7 +10,10 @@ import junit.framework.Assert;
 
 import static org.junit.Assert.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +64,8 @@ public class EmployeePayrollJDBCTest {
     public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
     	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
-    	empPayrollService.addEmployeeToPayroll("Sneha", 70000.0, LocalDate.now(), "F");
-    	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Sneha");
+    	empPayrollService.addEmployeeToPayroll("Soumik", 70000.0, LocalDate.now(), "M");
+    	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Soumik");
     	Assert.assertTrue(result);
     }
     
@@ -73,5 +76,22 @@ public class EmployeePayrollJDBCTest {
     	empPayrollService.deleteEmployeeFromPayroll("Sreyansh");
     	boolean result = empPayrollService.checkEmployeePayrollAfterDeletion("Sreyansh");
     	Assert.assertTrue(result);
+    }
+    
+    @Test 
+    public void given3Employees_WhenAdded_ShouldMatchEmpCount() {
+    	EmployeePayrollData[] empPayrollData = {
+    			new EmployeePayrollData(0, "Aritra", 60000.0, "M", LocalDate.now()),
+    			new EmployeePayrollData(0, "Sneha", 70000.0, "F", LocalDate.now()),
+    			new EmployeePayrollData(0, "Anirban", 50000.0, "M", LocalDate.now())
+    	};
+    	EmployeePayrollService empPayrollService = new EmployeePayrollService();
+    	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	Instant start = Instant.now();
+    	empPayrollService.addEmployeeToPayrollWithoutThreads(Arrays.asList(empPayrollData));
+    	Instant end = Instant.now();
+    	System.out.println("Duration without thread : " + Duration.between(start, end));
+    	List<EmployeePayrollData> employeePayrollData = empPayrollService.readEmployeePayrollData(IOService.DB_IO);
+    	Assert.assertEquals(4, employeePayrollData.size());
     }
 }
