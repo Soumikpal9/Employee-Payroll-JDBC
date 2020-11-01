@@ -38,9 +38,9 @@ public class EmployeePayrollJDBC {
 		String userName = "root";
 		String password = "Resurrection@5";
 		Connection connection;
-		//System.out.println("Processing Thread : " + Thread.currentThread().getName() + "Connecting to database with Id : " + connectionCounter);
+		System.out.println("Processing Thread : " + Thread.currentThread().getName() + "Connecting to database with Id : " + connectionCounter);
 		connection = DriverManager.getConnection(jdbcURL, userName, password);
-		//System.out.println("Processing Thread : " + Thread.currentThread().getName() + "Connecting to database with Id : " + connectionCounter + "Connection is successful!");
+		System.out.println("Processing Thread : " + Thread.currentThread().getName() + "Connecting to database with Id : " + connectionCounter + "Connection is successful!");
 		return connection;
 	}
 
