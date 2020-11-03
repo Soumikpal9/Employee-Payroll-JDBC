@@ -116,4 +116,8 @@ public class EmployeePayrollService {
 			catch(InterruptedException e) {}
 		}
 	}
+
+	public long countEntries(IOService ioService) {
+		return employeePayrollList.size();
+	}
 }
