@@ -1,5 +1,7 @@
 package Employee.Payroll.JDBC;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -11,7 +13,6 @@ import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import junit.framework.Assert;
 
 public class EmployeePayrollRestAPITest {
 	@Before
@@ -40,7 +41,7 @@ public class EmployeePayrollRestAPITest {
 		EmployeePayrollService empPayrollService;
 		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmp));
 		long entries = empPayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
-		Assert.assertEquals(3, entries);
+		assertEquals(3, entries);
 	}
 	
 	@Test
@@ -53,11 +54,35 @@ public class EmployeePayrollRestAPITest {
 		empPayrollData = new EmployeePayrollData(0, "Sneha", 65000.0, "F", LocalDate.now());
 		Response response = addEmpToJSONServer(empPayrollData);
 		int statusCode = response.getStatusCode();
-		Assert.assertEquals(201, statusCode);
+		assertEquals(201, statusCode);
 		
 		EmployeePayrollData[] arrOfEmployee = getEmpList();
 		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmployee));
 		long entries = empPayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
-		Assert.assertEquals(4, entries);
+		assertEquals(4, entries);
+	}
+	
+	@Test
+	public void givenListOfNewEmp_WhenAdded_ShouldReturn201ResponseAndCount() {
+		EmployeePayrollData[] arrOfEmp = getEmpList();
+		EmployeePayrollService empPayrollService;
+		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmp));
+		
+		EmployeePayrollData[] arrOfEmpPayroll = {
+				new EmployeePayrollData(0, "Sudhanshu", 58000.0, "M", LocalDate.now()),
+				new EmployeePayrollData(0, "Manav", 55000.0, "M", LocalDate.now()),
+				new EmployeePayrollData(0, "Shivangi", 75000.0, "F", LocalDate.now())
+		};
+		for(EmployeePayrollData empPayrollData : arrOfEmpPayroll) {
+			Response response = addEmpToJSONServer(empPayrollData);
+			int statusCode = response.getStatusCode();
+			assertEquals(201, statusCode);
+			System.out.println(empPayrollData.name);
+		}
+		
+		EmployeePayrollData[] arrOfEmployee = getEmpList();
+		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmployee));
+		long entries = empPayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+		assertEquals(7, entries);
 	}
 }
