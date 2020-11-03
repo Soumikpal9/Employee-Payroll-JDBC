@@ -35,6 +35,14 @@ public class EmployeePayrollRestAPITest {
 		return request.post("/employees");
 	}
 	
+	private Response updateEmpToJSONServer(EmployeePayrollData employeePayrollData) {
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(empJson);
+		return request.put("/employees/" + employeePayrollData.id);
+	}
+	
 	@Test
 	public void givenEmployeeDataInJsonServer_WhenRetrived_ShouldMatchCount() {
 		EmployeePayrollData[] arrOfEmp = getEmpList();
@@ -77,12 +85,25 @@ public class EmployeePayrollRestAPITest {
 			Response response = addEmpToJSONServer(empPayrollData);
 			int statusCode = response.getStatusCode();
 			assertEquals(201, statusCode);
-			System.out.println(empPayrollData.name);
 		}
 		
 		EmployeePayrollData[] arrOfEmployee = getEmpList();
 		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmployee));
 		long entries = empPayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
 		assertEquals(7, entries);
+	}
+	
+	@Test 
+	public void givenNewSalaryForEmp_WhenAdded_ShouldReturn200Response() {
+		EmployeePayrollData[] arrOfEmp = getEmpList();
+		EmployeePayrollService empPayrollService;
+		empPayrollService = new EmployeePayrollService(Arrays.asList(arrOfEmp));
+		
+		empPayrollService.updateEmployeeSalary("Soumik", 75000.0, EmployeePayrollService.IOService.REST_IO);
+		EmployeePayrollData empPayrollData = empPayrollService.getEmployeePayrollData("Soumik");
+		
+		Response response = updateEmpToJSONServer(empPayrollData);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
 	}
 }
