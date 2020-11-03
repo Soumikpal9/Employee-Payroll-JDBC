@@ -87,8 +87,11 @@ public class EmployeePayrollService {
 		return employeePayrollData;
 	}
 
-	public void deleteEmployeeFromPayroll(String name) {
-		employeePayrollDB.deleteEmployeeData(name);
+	public void deleteEmployeeFromPayroll(String name, IOService ioService) {
+		if(ioService.equals(IOService.REST_IO)) {
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+			employeePayrollList.remove(employeePayrollData);
+		}
 	}
 
 	public void addEmployeeToPayrollWithoutThreads(List<EmployeePayrollData> employeePayrollList) {
