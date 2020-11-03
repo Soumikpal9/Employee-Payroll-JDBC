@@ -79,7 +79,7 @@ public class EmployeePayrollJDBCTest {
     public void givenEmployee_WhenDeleted_ShouldSyncWithDB() {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
     	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
-    	empPayrollService.deleteEmployeeFromPayroll("Sreyansh");
+    	empPayrollService.deleteEmployeeFromPayroll("Sreyansh", IOService.DB_IO);
     	boolean result = empPayrollService.checkEmployeePayrollAfterDeletion("Sreyansh");
     	Assert.assertTrue(result);
     }
