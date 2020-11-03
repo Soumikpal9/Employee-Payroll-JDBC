@@ -35,7 +35,7 @@ public class EmployeePayrollJDBCTest {
     public void givenNewSalary_WhenUpdated_shouldMatchWithDB() {
     	EmployeePayrollService empPayrollService = new EmployeePayrollService();
     	empPayrollService.readEmployeePayrollData(IOService.DB_IO);
-    	empPayrollService.updateEmployeeSalary("Soumik", 70000);
+    	empPayrollService.updateEmployeeSalary("Soumik", 70000, IOService.DB_IO);
     	boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Soumik");
     	Assert.assertTrue(result);
     }
